@@ -28,6 +28,7 @@ export default function Home() {
   const { marketData, fetchMarketData, isLoading: isLoadingMarket } = useMarketStore();
 
   // State
+  const [account, setAccount] = useState<string>("")
   const [balance, setBalance] = useState<string>("");
   const [userInfo, setUserInfo] = useState<any>(null);
   const [selectedToken, setSelectedToken] = useState<string | null>(null);
@@ -35,6 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isConnected && address) {
+      setAccount(address as string)
       fetchBalance();
       fetchUserInfo();
       // Fetch market data for all supported tokens
@@ -45,7 +47,7 @@ export default function Home() {
   const fetchBalance = async () => {
     try {
       if (!address) return;
-      const balanceResponse = await publicClient?.getBalance({ address });
+      const balanceResponse = await publicClient?.getBalance({ address: address as `0x${string}`  });
       const balanceInEther = formatEther(balanceResponse!);
       setBalance(formatBalance(balanceInEther));
     } catch (error) {
